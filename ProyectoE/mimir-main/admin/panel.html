@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin</title>
+    <link rel="stylesheet" href="panel-admin.css">
+    <link rel="icon" href="../logo/Icono-Petshop.png">
+
+
+
+
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Panel de Administración</h1>
+            <button id="btnLogout" class="btn-delete">Cerrar Sesión</button>
+        </div>
+
+        <!-- 🔹 Menú de navegación entre secciones -->
+        <div class="menu-tabs">
+            <button id="tabClientes" class="tab active">Clientes</button>
+            <button id="tabProductos" class="tab">Productos</button>
+        </div>
+
+        <!-- 🔹 Sección CLIENTES -->
+        <section id="clientesSection" class="section active">
+            <div class="table-container">
+                <button id="btnAddCliente" class="btn-primary">Agregar Cliente</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 🔹 Sección PRODUCTOS -->
+        <section id="productosSection" class="section">
+            <div class="table-container">
+                <button id="btnAddProducto" class="btn-primary">Agregar Producto</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Categoría</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productosTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- 🔹 Modal CLIENTE -->
+    <div id="clienteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Agregar Cliente</h2>
+            <form id="clienteForm">
+                <input type="hidden" id="clienteId">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 🔹 Modal PRODUCTO -->
+    <div id="productoModal" class="modal">
+        <div class="modal-content">
+            <span class="close close-producto">&times;</span>
+            <h2 id="modalTitleProducto">Agregar Producto</h2>
+            <form id="productoForm">
+                <input type="hidden" id="productoId">
+                <div class="form-group">
+                    <label for="nombreProducto">Nombre:</label>
+                    <input type="text" id="nombreProducto" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <div class="form-group">
+                    <label for="precioProducto">Precio:</label>
+                    <input type="number" id="precioProducto" step="0.01" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <div class="form-group">
+                    <label for="categoriaProducto">Categoría:</label>
+                    <input type="text" id="categoriaProducto" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                </div>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/admin/admin.js"></script>
+</body>
+</html>
