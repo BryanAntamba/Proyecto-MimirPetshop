@@ -7,9 +7,6 @@
     <link rel="stylesheet" href="panel-admin.css">
     <link rel="icon" href="../logo/Icono-Petshop.png">
 
-
-
-
 </head>
 <body>
     <div class="admin-container">
@@ -72,15 +69,15 @@
                 <input type="hidden" id="clienteId">
                 <div class="form-group">
                     <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                    <input type="text" id="nombre" required pattern="[A-Za-zÀ-ÿ\s]{3,}" title="Nombre: sólo letras y espacios (mín. 3 caracteres)" maxlength="50" oninvalid="this.setCustomValidity('El nombre es obligatorio')" oninput="this.setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                    <input type="email" id="email" required title="Introduce un correo válido" oninvalid="this.setCustomValidity('El email es obligatorio')" oninput="this.setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label for="telefono">Teléfono:</label>
-                    <input type="text" id="telefono" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                    <input type="text" id="telefono" required pattern="\d{10}" minlength="10" maxlength="10" inputmode="numeric" title="Teléfono: 10 dígitos numéricos" oninvalid="this.setCustomValidity('El teléfono es obligatorio')" oninput="this.setCustomValidity('')">
                 </div>
                 <button type="submit" class="btn-primary">Guardar</button>
             </form>
@@ -96,15 +93,24 @@
                 <input type="hidden" id="productoId">
                 <div class="form-group">
                     <label for="nombreProducto">Nombre:</label>
-                    <input type="text" id="nombreProducto" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                    <input type="text" id="nombreProducto" required pattern="[A-Za-zÀ-ÿ\s]{2,}" title="Nombre: sólo letras y espacios (mín. 2 caracteres)" maxlength="80" oninvalid="this.setCustomValidity('El nombre del producto es obligatorio')" oninput="this.setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label for="precioProducto">Precio:</label>
-                    <input type="number" id="precioProducto" step="0.01" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                    <input type="number" id="precioProducto" step="0.01" min="0.01" required title="Precio mayor que 0" oninvalid="this.setCustomValidity('El precio es obligatorio')" oninput="this.setCustomValidity('')">
                 </div>
                 <div class="form-group">
                     <label for="categoriaProducto">Categoría:</label>
-                    <input type="text" id="categoriaProducto" required oninvalid="this.setCustomValidity('Llene porfavor los datos')">
+                    <select id="categoriaProducto" required oninvalid="this.setCustomValidity('Debe seleccionar una categoría')" onchange="this.setCustomValidity('')">
+                        <option value="">-- Seleccione categoría --</option>
+                        <option value="Comida para Perro">Comida para Perro</option>
+                        <option value="Comida para Gato">Comida para Gato</option>
+                        <option value="Comida para Aves">Comida para Aves</option>
+                        <option value="Accesorios">Accesorios</option>
+                        <option value="Higiene">Higiene</option>
+                        <option value="Medicamentos">Medicamentos</option>
+                        <option value="Juguetes">Juguetes</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn-primary">Guardar</button>
             </form>

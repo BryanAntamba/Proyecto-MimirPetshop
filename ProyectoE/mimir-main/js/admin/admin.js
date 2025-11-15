@@ -52,10 +52,45 @@ document.addEventListener('DOMContentLoaded', () => {
     clienteForm.addEventListener('submit', e => {
         e.preventDefault();
         const clienteId = document.getElementById('clienteId').value;
+        const nombreInput = document.getElementById('nombre');
+        const emailInput = document.getElementById('email');
+        const telefonoInput = document.getElementById('telefono');
+
+        // Clear previous custom validity
+        nombreInput.setCustomValidity('');
+        emailInput.setCustomValidity('');
+        telefonoInput.setCustomValidity('');
+
+        const nameRegex = /^[A-Za-zÀ-ÿ\s]{3,}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        const phoneRegex = /^\d{10}$/;
+
+        // Validaciones con enfoque al primer inválido
+        if (!nameRegex.test(nombreInput.value.trim())) {
+            nombreInput.setCustomValidity('Nombre inválido: sólo letras y espacios (mín. 3 caracteres).');
+            nombreInput.reportValidity();
+            nombreInput.focus();
+            return;
+        }
+
+        if (!emailRegex.test(emailInput.value.trim())) {
+            emailInput.setCustomValidity('Introduce un correo electrónico válido (ej: user@dominio.com).');
+            emailInput.reportValidity();
+            emailInput.focus();
+            return;
+        }
+
+        if (!phoneRegex.test(telefonoInput.value.trim())) {
+            telefonoInput.setCustomValidity('Teléfono inválido: debe contener exactamente 10 dígitos.');
+            telefonoInput.reportValidity();
+            telefonoInput.focus();
+            return;
+        }
+
         const cliente = {
-            nombre: document.getElementById('nombre').value,
-            email: document.getElementById('email').value,
-            telefono: document.getElementById('telefono').value
+            nombre: nombreInput.value.trim(),
+            email: emailInput.value.trim(),
+            telefono: telefonoInput.value.trim()
         };
         if (clienteId) {
             cliente.id = parseInt(clienteId);
@@ -68,6 +103,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mostrarClientes();
         clienteModal.style.display = 'none';
     });
+
+    // Enforce digits-only for telefono while typing
+    const telefonoField = document.getElementById('telefono');
+    if (telefonoField) {
+        telefonoField.addEventListener('input', () => {
+            telefonoField.value = telefonoField.value.replace(/[^0-9]/g, '').slice(0, 10);
+        });
+    }
 
     window.editarCliente = id => {
         const cliente = clientes.find(c => c.id === id);
@@ -134,10 +177,43 @@ document.addEventListener('DOMContentLoaded', () => {
     productoForm.addEventListener('submit', e => {
         e.preventDefault();
         const productoId = document.getElementById('productoId').value;
+        const nombreProductoInput = document.getElementById('nombreProducto');
+        const precioProductoInput = document.getElementById('precioProducto');
+        const categoriaProductoInput = document.getElementById('categoriaProducto');
+
+        // Clear previous custom validity
+        nombreProductoInput.setCustomValidity('');
+        precioProductoInput.setCustomValidity('');
+        categoriaProductoInput.setCustomValidity('');
+
+        const prodNameRegex = /^[A-Za-zÀ-ÿ\s]{2,}$/;
+
+        if (!prodNameRegex.test(nombreProductoInput.value.trim())) {
+            nombreProductoInput.setCustomValidity('Nombre inválido: sólo letras y espacios (mín. 2 caracteres).');
+            nombreProductoInput.reportValidity();
+            nombreProductoInput.focus();
+            return;
+        }
+
+        const precioVal = parseFloat(precioProductoInput.value);
+        if (isNaN(precioVal) || precioVal <= 0) {
+            precioProductoInput.setCustomValidity('Introduzca un precio válido mayor que 0.');
+            precioProductoInput.reportValidity();
+            precioProductoInput.focus();
+            return;
+        }
+
+        if (!categoriaProductoInput.value || categoriaProductoInput.value.trim() === '') {
+            categoriaProductoInput.setCustomValidity('Seleccione una categoría.');
+            categoriaProductoInput.reportValidity();
+            categoriaProductoInput.focus();
+            return;
+        }
+
         const producto = {
-            nombre: document.getElementById('nombreProducto').value,
-            precio: parseFloat(document.getElementById('precioProducto').value),
-            categoria: document.getElementById('categoriaProducto').value
+            nombre: nombreProductoInput.value.trim(),
+            precio: precioVal,
+            categoria: categoriaProductoInput.value.trim()
         };
         if (productoId) {
             producto.id = parseInt(productoId);

@@ -141,37 +141,37 @@
             <form id="registerForm">
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
+                    <input type="text" id="nombre" placeholder="Ingresa tu nombre" required oninvalid="this.setCustomValidity('El nombre es obligatorio')" oninput="this.setCustomValidity('')">
                     <span class="error-msg" id="error-nombre"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" placeholder="Ingresa tu apellido" required>
+                    <input type="text" id="apellido" placeholder="Ingresa tu apellido" required oninvalid="this.setCustomValidity('El apellido es obligatorio')" oninput="this.setCustomValidity('')">
                     <span class="error-msg" id="error-apellido"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="fecha">Fecha de Nacimiento</label>
-                    <input type="date" id="fecha" required>
+                    <input type="date" id="fecha" required oninvalid="this.setCustomValidity('La fecha de nacimiento es obligatoria')" onchange="this.setCustomValidity('')">
                     <span class="error-msg" id="error-fecha"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="correo">Correo Electrónico</label>
-                    <input type="email" id="correo" placeholder="ejemplo@correo.com" required>
+                    <input type="email" id="correo" placeholder="ejemplo@correo.com" required oninvalid="this.setCustomValidity('Ingrese un correo electrónico válido')" oninput="this.setCustomValidity('')">
                     <span class="error-msg" id="error-correo"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="telefono">Número de Teléfono</label>
-                    <input type="tel" id="telefono" placeholder="0999999999" pattern="[0-9]{10}" required>
+                    <input type="tel" id="telefono" placeholder="0999999999" pattern="[0-9]{10}" required oninvalid="this.setCustomValidity('Ingrese 10 dígitos numéricos')" oninput="this.setCustomValidity('')">
                     <span class="error-msg" id="error-telefono"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="contrasena">Contraseña</label>
-                    <input type="password" id="contrasena" placeholder="Mínimo 6 caracteres" minlength="6" required>
+                    <input type="password" id="contrasena" placeholder="Mínimo 6 caracteres" minlength="6" required oninvalid="this.setCustomValidity('La contraseña debe tener mínimo 6 caracteres')" oninput="this.setCustomValidity('')">
                     <span class="error-msg" id="error-contrasena"></span>
                 </div>
 
