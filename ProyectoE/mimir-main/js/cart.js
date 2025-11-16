@@ -3,7 +3,20 @@
    ============================== */
 
 (() => {
-  const STORAGE_KEY = "mimir_cart";
+  const BASE_STORAGE_KEY = "mimir_cart";
+  const SESSION_KEY = "mimir_session";
+
+  // Obtener clave de carrito específica del usuario
+  const getCartKey = () => {
+    try {
+      const session = localStorage.getItem(SESSION_KEY);
+      if (!session) return BASE_STORAGE_KEY;
+      const user = JSON.parse(session);
+      return `${BASE_STORAGE_KEY}_${user.userId || 'guest'}`;
+    } catch {
+      return BASE_STORAGE_KEY;
+    }
+  };
 
   // UI refs
   const cartCountEl = document.getElementById("cartCount");
@@ -15,19 +28,26 @@
   const payBtnEl    = document.getElementById("payBtn");
 
   let cart = [];
+  let isBinding = false;
 
   // Utils
   const fmt = (n) => (Math.round(n * 100) / 100).toFixed(2);
-  const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+  const save = () => localStorage.setItem(getCartKey(), JSON.stringify(cart));
   const load = () => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(getCartKey());
       cart = raw ? JSON.parse(raw) : [];
       if (!Array.isArray(cart)) cart = [];
     } catch { cart = []; }
   };
   const countItems = () => cart.reduce((acc, it) => acc + it.qty, 0);
   const calcTotal  = () => cart.reduce((acc, it) => acc + it.price * it.qty, 0);
+
+  // Verificar login
+  const isLoggedIn = () => {
+    const session = localStorage.getItem("mimir_session");
+    return !!session;
+  };
 
   const openMini   = () => miniCartEl?.classList.add("show");
   const closeMini  = () => miniCartEl?.classList.remove("show");
@@ -95,8 +115,19 @@
 
   // Ops
   const addItem = (payload) => {
+    // Validar login
+    if (!isLoggedIn()) {
+      alert("Por favor inicia sesión para agregar productos al carrito.");
+      window.location.href = "../login/login.html";
+      return;
+    }
+
     const { sku, name, price, img, qty = 1, unit = "" } = payload || {};
     if (!sku || !name || isNaN(price)) return;
+    if (qty < 1) {
+      console.warn("Cantidad debe ser mayor a 0.");
+      return;
+    }
 
     const found = cart.find((it) => it.sku === sku && it.unit === unit);
     if (found) {
@@ -134,20 +165,26 @@
     const unit  = (card.getAttribute("data-unit") || "").trim();
     const img   = card.querySelector("img")?.getAttribute("src") || "";
 
-    // cantidad leída del input adyacente
     const qtyInp = card.querySelector(".qty-input");
-    const qtyVal = Math.max(1, parseInt(qtyInp?.value || "1", 10));
+    const qtyVal = Math.max(0, parseInt(qtyInp?.value || "0", 10));
 
+    if (qtyVal < 1) return null;
     return { sku, name, price, img, qty: qtyVal, unit };
   };
 
   const bindAddToCart = () => {
+    if (isBinding) return;
+    isBinding = true;
+
     document.querySelectorAll(".add-to-cart").forEach((btn) => {
+      if (btn.dataset.cartBound === "true") return;
+      btn.dataset.cartBound = "true";
+      
       btn.addEventListener("click", (e) => {
         e.preventDefault();
         const payload = getCardPayload(btn);
-        if (!payload || !payload.sku) {
-          console.warn("No se encontraron datos válidos en la tarjeta para agregar al carrito.");
+        if (!payload) {
+          alert("Por favor selecciona una cantidad mayor a 0.");
           return;
         }
         addItem(payload);
@@ -159,24 +196,43 @@
       const minus = wrap.querySelector(".qty-btn.minus");
       const plus  = wrap.querySelector(".qty-btn.plus");
       const inp   = wrap.querySelector(".qty-input");
-      minus?.addEventListener("click", () => {
-        const v = Math.max(1, parseInt(inp.value || "1", 10) - 1);
-        inp.value = String(v);
-      });
-      plus?.addEventListener("click", () => {
-        const v = Math.max(1, parseInt(inp.value || "1", 10) + 1);
-        inp.value = String(v);
-      });
+      
+      if (minus && !minus.dataset.bound) {
+        minus.dataset.bound = "true";
+        minus.addEventListener("click", (e) => {
+          e.preventDefault();
+          const v = Math.max(0, parseInt(inp.value || "0", 10) - 1);
+          inp.value = String(v);
+        });
+      }
+      
+      if (plus && !plus.dataset.bound) {
+        plus.dataset.bound = "true";
+        plus.addEventListener("click", (e) => {
+          e.preventDefault();
+          const v = parseInt(inp.value || "0", 10) + 1;
+          inp.value = String(v);
+        });
+      }
     });
+
+    isBinding = false;
   };
 
   // Global
   const bindGlobal = () => {
-    cartLinkEl?.addEventListener("click", (e) => { e.preventDefault(); toggleMini(); });
+    cartLinkEl?.addEventListener("click", (e) => { 
+      e.preventDefault(); 
+      if (!isLoggedIn()) {
+        alert("Por favor inicia sesión para ver tu carrito.");
+        window.location.href = "../login/login.html";
+        return;
+      }
+      toggleMini(); 
+    });
     closeMiniEl?.addEventListener("click", closeMini);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMini(); });
 
-    // Pagar → abrir modal (payment.js valida login)
     payBtnEl?.addEventListener("click", (e) => {
       e.preventDefault();
       if (cart.length === 0) return openMini();
@@ -189,8 +245,19 @@
     load(); updateBadge(); renderCart();
     bindAddToCart(); bindGlobal();
 
-    // por si renderizas más tarjetas dinámicamente
-    const observer = new MutationObserver(() => bindAddToCart());
+    const observer = new MutationObserver((mutations) => {
+      let shouldRebind = false;
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (node.nodeType === 1 && (node.classList?.contains('card') || node.querySelector?.('.card'))) {
+            shouldRebind = true;
+            break;
+          }
+        }
+        if (shouldRebind) break;
+      }
+      if (shouldRebind) bindAddToCart();
+    });
     observer.observe(document.body, { childList: true, subtree: true });
   };
   document.addEventListener("DOMContentLoaded", init);
