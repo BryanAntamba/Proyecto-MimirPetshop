@@ -83,3 +83,77 @@
 
 @keyframes stem { to { transform: rotate(45deg) scaleX(1); } }
 @keyframes kick { to { transform: rotate(-45deg) scaleX(1); } }
+
+/* Estilos para el depósito bancario */
+.deposito-info {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.deposito-info h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.nombre-titular {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4a90e2;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.cuentas-bancarias {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.cuenta-item {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.cuenta-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.cuenta-item h4 {
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.numero-cuenta {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.instruccion {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+/* Responsive para cuentas bancarias */
+@media (min-width: 600px) {
+  .cuentas-bancarias {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .cuenta-item {
+    flex: 1;
+    max-width: 45%;
+  }
+}

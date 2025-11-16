@@ -373,6 +373,7 @@
     </div>
   </div>
 
+ // ...existing code...
   <!-- MODAL DE PAGO (misma página) -->
   <div id="modalPago" class="modal-pago-overlay hidden" aria-hidden="true">
     <div class="modal-pago" role="dialog" aria-modal="true">
@@ -382,30 +383,25 @@
       </div>
 
       <div class="modal-body">
-        <p>Total: $<strong id="modalTotal"></strong></p>
+        <p>Total a pagar: $<strong id="modalTotal"></strong></p>
 
-        <div class="pay-methods">
-          <label><input type="radio" name="paymethod" value="card" checked> Tarjeta</label>
-          <label><input type="radio" name="paymethod" value="payphone"> PayPhone</label>
-        </div>
+         <div class="deposito-info">
+          <h3>Deposita tu dinero para finalizar tu compra</h3>
+          <p class="nombre-titular">Cargando...</p>
 
-        <form id="cardForm" class="card-form" autocomplete="off">
-          <label>Número de tarjeta</label>
-          <input id="ccNumber" placeholder="4111 1111 1111 1111" maxlength="19" inputmode="numeric">
+          <div class="cuentas-bancarias">
+            <div class="cuenta-item">
+              <h4>Banco Pichincha</h4>
+              <p class="numero-cuenta">12345678901</p>
+            </div>
 
-          <label>Vencimiento (MM/AA)</label>
-          <input id="ccExp" placeholder="12/28" maxlength="5" inputmode="numeric">
+            <div class="cuenta-item">
+              <h4>Banco Guayaquil</h4>
+              <p class="numero-cuenta">98765432109</p>
+            </div>
+          </div>
 
-          <label>CVV</label>
-          <input id="ccCvv" placeholder="123" maxlength="4" inputmode="numeric">
-
-          <label>Nombre del titular</label>
-          <input id="ccName" placeholder="Juan Pérez" autocomplete="name">
-        </form>
-
-        <div id="payphoneBox" class="payphone-box hidden">
-          <p>Escanea con PayPhone para continuar</p>
-          <div class="qr"></div>
+          <p class="instruccion">Una vez realizado el depósito, haz clic en "Finalizar compra"</p>
         </div>
 
         <p id="pagoError" class="pago-error hidden"></p>
@@ -413,7 +409,7 @@
 
       <div class="actions">
         <button id="btnCancelarPago" class="btn-cancelar" type="button">Cancelar</button>
-        <button id="btnConfirmarPago" class="btn-confirmar" type="button">Confirmar pago</button>
+        <button id="btnConfirmarPago" class="btn-confirmar" type="button">Finalizar compra</button>
       </div>
     </div>
   </div>
@@ -430,6 +426,7 @@
       <p>Gracias por tu compra 💙</p>
     </div>
   </div>
+
 
   <!-- Scripts -->
   <script src="../js/payment.js"></script>
